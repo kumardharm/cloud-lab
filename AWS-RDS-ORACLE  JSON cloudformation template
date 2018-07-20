@@ -1,0 +1,244 @@
+JSON Templete file:
+
+Scope: We are creating one RDS Oracle instance with encrption.
+
+Conditions: We haven't used all property attributes but will explain the usage later.
+
+
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Parameters": {
+        "RDSInstanceIdentifier": {
+            "Description": "Specify a name that is unique for all DB instances",
+            "Type": "String",
+            "MinLength": "1",
+            "MaxLength": "63",
+            "AllowedPattern": "[a-zA-Z][a-zA-Z0-9^/@]*",
+            "ConstraintDescription": "Must contain only alphanumeric characters, No Special characters are allowed"
+        },
+        "RDSMasterUser": {
+            "NoEcho": "true",
+            "Description": "Master Username for RDS oracle database access",
+            "Type": "String",
+            "MinLength": "5",
+            "MaxLength": "16",
+            "AllowedPattern": "[a-zA-Z][a-zA-Z0-9]*",
+            "ConstraintDescription": "Must begin with a letter and contain only alphanumeric characters."
+        },
+        "RDSMasterPassword": {
+            "Description": "Master Password for RDS oracle database access",
+            "NoEcho": "true",
+            "Type": "String",
+            "MinLength": "8",
+            "MaxLength": "100",
+            "AllowedPattern": "[a-zA-Z0-9]*",
+            "ConstraintDescription": "Must begin with a letter and alphanumeric (minimum 8 character)"
+        }
+    },
+    "Metadata": {
+        "AWS::CloudFormation::Designer": {
+            "539399bb-484d-4f29-b978-a048510989b0": {
+                "size": {
+                    "width": 60,
+                    "height": 60
+                },
+                "position": {
+                    "x": 390,
+                    "y": 100
+                },
+                "z": 0,
+                "embeds": [],
+                "isassociatedwith": [
+                    "a2c444a2-6272-4faf-821b-26fe51dc5cc3",
+                    "57f3525b-b435-4159-b389-2a2817a53dbd"
+                ],
+                "iscontainedinside": [
+                    "2446d38d-1a4a-4ef1-9e3b-7116886221b7"
+                ]
+            },
+            "a2c444a2-6272-4faf-821b-26fe51dc5cc3": {
+                "size": {
+                    "width": 60,
+                    "height": 60
+                },
+                "position": {
+                    "x": 510,
+                    "y": 100
+                },
+                "z": 0,
+                "embeds": []
+            },
+            "2446d38d-1a4a-4ef1-9e3b-7116886221b7": {
+                "size": {
+                    "width": 140,
+                    "height": 140
+                },
+                "position": {
+                    "x": 370,
+                    "y": -80
+                },
+                "z": 0,
+                "embeds": []
+            },
+            "57f3525b-b435-4159-b389-2a2817a53dbd": {
+                "size": {
+                    "width": 60,
+                    "height": 60
+                },
+                "position": {
+                    "x": 270,
+                    "y": 100
+                },
+                "z": 0,
+                "embeds": []
+            }
+        }
+    },
+    "Resources": {
+        "RDSINSTANCE": {
+            "Type": "AWS::RDS::DBInstance",
+            "Properties": {
+                "AllocatedStorage": "20",
+                "AvailabilityZone" : "eu-central-1a",
+                "CharacterSetName": "AL32UTF8",
+                "DBInstanceClass": "db.m4.2xlarge",
+                "DBInstanceIdentifier": {
+                    "Ref": "RDSInstanceIdentifier"
+                },
+                "DBSubnetGroupName": {
+                    "Ref": "RDSSUBGROUP"
+                },
+                "Engine": "oracle-ee",
+                "EngineVersion": "12.1.0.2.v12",
+                "KmsKeyId": {
+                    "Ref": "RDSKMSKEY"
+                },
+                "LicenseModel": "bring-your-own-license",
+                "MasterUsername": {
+                    "Ref": "RDSMasterUser"
+                },
+                "MasterUserPassword": {
+                    "Ref": "RDSMasterPassword"
+                },
+                "MultiAZ": "FALSE",
+                "Port": "1530",
+                "PubliclyAccessible": "FALSE",
+                "SourceRegion": "eu-central-1",
+                "StorageEncrypted": "TRUE",
+                "StorageType": "GP2",
+                "Tags": [
+                    {
+                        "Key": "RDSINSTANCE",
+                        "Value": "RDSGP2"
+                    }
+                ],
+                "VPCSecurityGroups": [
+                    {
+                        "Ref": "DBPRIVSG"
+                    }
+                ]
+            },
+            "Metadata": {
+                "AWS::CloudFormation::Designer": {
+                    "id": "539399bb-484d-4f29-b978-a048510989b0"
+                }
+            }
+        },
+        "DBPRIVSG": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "GroupDescription": "Enable port to access the instance",
+                "VpcId": "vpc-1e3dxxxx",
+                "SecurityGroupIngress": [
+                    {
+                        "CidrIp": "11.224.18.48/28",
+                        "FromPort": "1530",
+                        "IpProtocol": "tcp",
+                        "ToPort": "1530"
+                    }
+                ]
+            },
+            "Metadata": {
+                "AWS::CloudFormation::Designer": {
+                    "id": "a2c444a2-6272-4faf-821b-26fe51dc5cc3"
+                }
+            }
+        },
+        "RDSSUBGROUP": {
+            "Type": "AWS::RDS::DBSubnetGroup",
+            "Properties": {
+                "DBSubnetGroupDescription": "Subnets available for the RDS DB Instance",
+                "SubnetIds": [
+                    "subnet-cda4a7a6",
+                    "subnet-95fa83e8"
+                ]
+            },
+            "Metadata": {
+                "AWS::CloudFormation::Designer": {
+                    "id": "2446d38d-1a4a-4ef1-9e3b-7116886221b7"
+                }
+            }
+        },
+        "RDSKMSKEY": {
+            "Type": "AWS::KMS::Key",
+            "Properties": {
+                "Description": "KMS key to encrpt the RDS database",
+                "Enabled": "TRUE",
+                "KeyPolicy": {
+                    "Version": "2017-07-20",
+                    "Id": "key-default-1",
+                    "Statement": [
+                        {
+                            "Sid": "Allow administration of the key",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "AWS": "arn:aws:kms:us-east-1:012345678910:key/abcd1234-a123-456a-a12b-a123b4cd56ef"
+                            },
+                            "Action": [
+                                "kms:Create*",
+                                "kms:Describe*",
+                                "kms:Enable*",
+                                "kms:List*",
+                                "kms:Put*",
+                                "kms:Update*",
+                                "kms:Revoke*",
+                                "kms:Disable*",
+                                "kms:Get*",
+                                "kms:Delete*",
+                                "kms:ScheduleKeyDeletion",
+                                "kms:CancelKeyDeletion"
+                            ],
+                            "Resource": "*"
+                        },
+                        {
+                            "Sid": "Allow use of the key",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "AWS": "arn:aws:kms:us-east-1:012345678910:key/abcd1234-a123-456a-a12b-a123b4cd56ef"
+                            },
+                            "Action": [
+                                "kms:Encrypt",
+                                "kms:Decrypt",
+                                "kms:ReEncrypt*",
+                                "kms:GenerateDataKey*",
+                                "kms:DescribeKey"
+                            ],
+                            "Resource": "*"
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "KMSADMINKEY",
+                        "Value": "ADMINARN"
+                    }
+                ]
+            },
+            "Metadata": {
+                "AWS::CloudFormation::Designer": {
+                    "id": "57f3525b-b435-4159-b389-2a2817a53dbd"
+                }
+            }
+        }
+    }
+}
