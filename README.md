@@ -9,8 +9,8 @@ ________________________________________________________________________________
 
 ###### Index of my code library 
 
-- RDS
-- DMS
+- RDS (https://github.com/kumardharm/cloud-lab/blob/master/AWS%20-%20CloudFormation/RDS)
+- DMS (https://github.com/kumardharm/cloud-lab/blob/master/AWS%20-%20CloudFormation/RDS)
 
 
 
