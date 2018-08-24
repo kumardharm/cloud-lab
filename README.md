@@ -12,6 +12,9 @@ ________________________________________________________________________________
 - [RDS] (https://github.com/kumardharm/cloud-lab/blob/master/AWS%20-%20CloudFormation/RDS)
 - [DMS] (https://github.com/kumardharm/cloud-lab/blob/master/AWS%20-%20CloudFormation/RDS)
 
+ -  [Steps](https://github.com/jparasha/Start-Stop-EC2-Instances_Across_All_Regions/blob/master/README.md#steps)
+  
+
 
 
 
