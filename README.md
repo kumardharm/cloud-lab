@@ -15,10 +15,7 @@ ________________________________________________________________________________
 
 
 
-
-
-
-#### Note : We are updating this code section as regularly to give you the latest updates.
+#### Note : We are updating this code section regularly to give you the latest updates.
 
 
 
