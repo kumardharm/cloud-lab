@@ -1,9 +1,3 @@
-JSON Templete file:
-
-Scope: We are creating one RDS Oracle instance with encrption.
-
-Conditions: We haven't used all property attributes but will explain the usage later.
-
 
 {
     "AWSTemplateFormatVersion": "2010-09-09",
